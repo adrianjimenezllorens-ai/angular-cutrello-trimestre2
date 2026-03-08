@@ -1,0 +1,40 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <div class="bg-red-50 p-6 rounded-lg shadow-lg flex flex-col">
+    <h3 class="text-xl font-bold mb-4 text-center text-red-950">Pendiente</h3>
+    <div class="space-y-4 grow">
+      @for (task of pending(); track task.id) {
+        <task-card
+          [task]="task"
+          (deleted)="deleteTask(task)"
+          (statusChange)="changeStatus(task, $event)"
+        ></task-card>
+      }
+    </div>
+  </div>
+
+  <div class="bg-yellow-50 p-6 rounded-lg shadow-lg flex flex-col">
+    <h3 class="text-xl font-bold mb-4 text-center text-yellow-950">En Proceso</h3>
+    <div class="space-y-4 grow">
+      @for (task of inProgress(); track task.id) {
+        <task-card
+          [task]="task"
+          (deleted)="deleteTask(task)"
+          (statusChange)="changeStatus(task, $event)"
+        ></task-card>
+      }
+    </div>
+  </div>
+
+  <div class="bg-green-50 p-6 rounded-lg shadow-lg flex flex-col">
+    <h3 class="text-xl font-bold mb-4 text-center text-green-950">Terminada</h3>
+    <div class="space-y-4 grow">
+      @for (task of finished(); track task.id) {
+        <task-card
+          [task]="task"
+          (deleted)="deleteTask(task)"
+          (statusChange)="changeStatus(task, $event)"
+        ></task-card>
+      }
+    </div>
+  </div>
+</div>

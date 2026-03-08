@@ -1,0 +1,72 @@
+<div class="border-t pt-6">
+  <h3 class="text-lg font-semibold text-gray-800 mb-4">Participantes</h3>
+
+  <div class="flex flex-wrap items-center gap-4">
+    @for (participant of participants(); track participant.id) {
+      <div class="inline-flex items-center gap-2 p-1 pr-3 rounded-full bg-gray-100">
+        <a [routerLink]="['/profile', participant.id]" class="flex items-center gap-2 group">
+          <img
+            [src]="participant.avatar"
+            [alt]="'Avatar de ' + participant.name"
+            class="user-avatar w-10 h-10 rounded-full border border-gray-100"
+          />
+          <span class="user-name font-medium text-gray-700 group-hover:text-indigo-600">
+            {{ participant.name }}
+          </span>
+        </a>
+
+        @if (isCreator(participant.id)) {
+          <span class="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2 py-0.5 rounded-full">
+            Creador
+          </span>
+        }
+
+        @if (mine() && !isCreator(participant.id)) {
+          <button
+            type="button"
+            class="text-gray-400 hover:text-red-600 hover:bg-red-100 w-6 h-6 rounded-full flex items-center justify-center transition-colors"
+            (click)="removeParticipant(participant.id)"
+          >
+            ×
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (mine()) {
+    <div class="relative mt-4">
+      <input
+        type="search"
+        placeholder="Buscar para añadir participante..."
+        class="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        [formField]="searchForm.search"
+      />
+
+      @if (showResults() && results().length > 0) {
+        <div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+            <ul class="py-1">
+            @for (user of results(); track user.id) {
+                <li>
+                <button
+                    type="button"
+                    class="w-full px-4 py-2 hover:bg-gray-100 cursor-pointer text-left"
+                    (click)="addParticipant(user)"
+                >
+                    <div class="flex items-center gap-3">
+                    <img
+                        [src]="user.avatar"
+                        [alt]="'Avatar de ' + user.name"
+                        class="user-avatar w-8 h-8 rounded-full"
+                    />
+                    <span class="user-name font-medium text-gray-700">{{ user.name }}</span>
+                    </div>
+                </button>
+                </li>
+            }
+            </ul>
+        </div>
+      }
+    </div>
+  }
+</div>

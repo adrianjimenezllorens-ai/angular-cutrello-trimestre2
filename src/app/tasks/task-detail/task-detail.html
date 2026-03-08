@@ -1,0 +1,114 @@
+@if (task()) {
+
+<div class="bg-white p-6 rounded-lg shadow-lg mb-8 max-w-4xl mx-auto space-y-8">
+
+  <!-- Título y Descripción -->
+  <div>
+    <h2 class="text-3xl font-bold text-gray-800">
+      {{ task()!.title }}
+    </h2>
+
+    <p class="text-sm text-gray-400">
+      Fecha límite:
+      <span>{{ task()!.deadLine | date:'dd/MM/yyyy' }}</span>
+    </p>
+
+    <p class="text-gray-700 mt-2 whitespace-pre-wrap">
+      {{ task()!.description }}
+    </p>
+
+    <div class="flex gap-3 mt-4">
+      <button
+        class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+        (click)="editTask()"
+      >
+        Modificar
+      </button>
+
+      <button
+        class="bg-red-700 text-white py-2 px-4 rounded-md hover:bg-red-800"
+        (click)="deleteTask()"
+      >
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <!-- Estado -->
+  <div class="border-t pt-6">
+    <label for="task-status" class="block text-sm font-medium text-gray-700 mb-2">
+      Estado de la tarea
+    </label>
+
+    <select
+      id="task-status"
+      class="status-select block w-full max-w-xs px-3 py-2 bg-transparent border border-gray-300 rounded-md shadow-sm"
+      (change)="changeStatus($event)"
+      [value]="task()!.status"
+    >
+      <option value="0">Pendiente</option>
+      <option value="1">En Proceso</option>
+      <option value="2">Terminada</option>
+    </select>
+  </div>
+
+  <!-- Participantes -->
+  <task-participants
+    [taskId]="task()!.id"
+    [creator]="task()!.creator"
+    [mine]="task()!.mine"
+    [participants]="task()!.participants"
+    (participantsChange)="updateParticipants($event)"
+  ></task-participants>
+
+  <!-- Subtareas -->
+  <task-subtasks
+    [taskId]="task()!.id"
+    [subtasks]="task()!.subtasks"
+    (subtasksChange)="updateSubtasks($event)"
+  ></task-subtasks>
+
+  <!-- Imagen -->
+  <div class="border-t pt-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+      Imagen Asociada
+    </h3>
+
+    @if (task()!.filepath) {
+      <img
+        [src]="task()!.filepath"
+        alt="Imagen de la tarea"
+        class="rounded-md w-full max-h-96 object-cover"
+      />
+    } @else {
+      <div class="rounded-md w-full h-56 bg-gray-100 flex items-center justify-center text-gray-400">
+        Esta tarea no tiene imagen
+      </div>
+    }
+
+    <input
+      type="file"
+      id="image-upload"
+      accept="image/*"
+      class="hidden"
+      encodeBase64
+      (encoded)="changeImage($event)"
+    />
+
+    <label
+      for="image-upload"
+      class="mt-4 inline-block cursor-pointer bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300"
+    >
+      Seleccionar imagen
+    </label>
+  </div>
+
+</div>
+
+<task-comments [taskId]="task()!.id"></task-comments>
+
+} @else {
+
+<p class="text-center text-gray-600">Cargando tarea...</p>
+
+}

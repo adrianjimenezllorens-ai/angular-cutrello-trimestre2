@@ -1,0 +1,71 @@
+<div class="bg-white p-6 rounded-lg shadow-lg mb-8 max-w-2xl mx-auto">
+  <h2 class="text-xl font-bold mb-4 text-gray-700">
+    @if (isEditing()) {
+      Editar tarea
+    } @else {
+      Añadir Nueva Tarea
+    }
+  </h2>
+
+  @if (id() > 0 && taskResource.isLoading()) {
+    <p class="text-gray-600">Cargando tarea...</p>
+  } @else {
+    <form class="space-y-4" (submit)="addTask($event)">
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
+        <input
+          type="text"
+          id="title"
+          [formField]="newTaskForm.title"
+          class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+        @for (error of newTaskForm.title().errors(); track error.kind) {
+          <div class="error-msg text-xs mt-1 text-red-700">{{ error.message }}</div>
+        }
+        @if (!newTaskForm.title().touched()) {
+          <p class="text-xs text-gray-500 mt-1">
+            Al menos 5 caracteres, solo letras, números y espacios.
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700">Descripción</label>
+        <textarea
+          id="description"
+          [formField]="newTaskForm.description"
+          rows="3"
+          class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        ></textarea>
+        @for (error of newTaskForm.description().errors(); track error.kind) {
+          <div class="error-msg text-xs mt-1 text-red-700">{{ error.message }}</div>
+        }
+      </div>
+
+      <div>
+        <label for="deadLine" class="block text-sm font-medium text-gray-700">Fecha Límite</label>
+        <input
+          type="date"
+          id="deadLine"
+          class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          [formField]="newTaskForm.deadLine"
+        />
+        @for (error of newTaskForm.deadLine().errors(); track error.kind) {
+          <div class="error-msg text-xs mt-1 text-red-700">{{ error.message }}</div>
+        }
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+        [disabled]="newTaskForm().invalid()"
+      >
+        @if (isEditing()) {
+          Guardar cambios
+        } @else {
+          Añadir Tarea
+        }
+      </button>
+    </form>
+  }
+</div>

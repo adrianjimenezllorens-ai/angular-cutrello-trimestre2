@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "tailwindcss";
+
+:is(input, textarea, select):not(.no-validation) {
+    &:focus {
+      @apply ring-2;
+    }
+
+    &.ng-touched.ng-invalid {
+        @apply border-red-600 ring-red-600/30;
+    }
+
+    &.ng-touched.ng-valid {
+        @apply border-green-600 ring-green-600/30;
+    }
+
+    &:not(.ng-touched.ng-invalid)~.error-msg {
+        @apply hidden;
+    }
+}

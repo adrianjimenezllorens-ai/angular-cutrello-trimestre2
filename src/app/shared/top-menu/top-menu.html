@@ -1,0 +1,70 @@
+<header class="bg-sky-900 shadow fixed h-16 flex items-center w-full z-10">
+  <div class="container mx-auto px-4 flex gap-4 justify-between items-center">
+
+    <div class="flex items-baseline gap-3">
+      <h1 class="text-3xl font-bold text-gray-50">
+        <a [routerLink]="['/']">Cutrello</a>
+      </h1>
+    </div>
+
+    <nav class="flex gap-3">
+
+      @if (!authService.logged()) {
+        <a
+          class="text-gray-200 hover:text-gray-50"
+          [routerLink]="['/auth/login']"
+          routerLinkActive="font-semibold"
+        >
+          Login
+        </a>
+
+        <a
+          class="text-gray-200 hover:text-gray-50"
+          [routerLink]="['/auth/register']"
+          routerLinkActive="font-semibold"
+        >
+          Registro
+        </a>
+      }
+
+      @if (authService.logged()) {
+
+        <a
+          class="text-gray-200 hover:text-gray-50"
+          [routerLink]="['/tasks']"
+          routerLinkActive="font-semibold"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Inicio
+        </a>
+
+        <a
+          class="text-gray-200 hover:text-gray-50"
+          [routerLink]="['/tasks', 'add']"
+          routerLinkActive="font-semibold"
+        >
+          Nueva tarea
+        </a>
+
+        <a
+          class="text-gray-200 hover:text-gray-50"
+          [routerLink]="['/profile']"
+          routerLinkActive="font-semibold"
+        >
+          Perfil
+        </a>
+
+        <button
+          type="button"
+          class="text-gray-200 hover:text-gray-50 cursor-pointer"
+          (click)="logout()"
+        >
+          Logout
+        </button>
+
+      }
+
+    </nav>
+
+  </div>
+</header>

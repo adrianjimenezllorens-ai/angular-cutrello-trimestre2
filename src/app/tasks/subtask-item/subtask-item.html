@@ -1,0 +1,22 @@
+<div class="flex items-center">
+  <label class="ml-3 text-sm text-gray-900 flex items-center gap-2">
+    <input
+      type="checkbox"
+      class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+      [checked]="subtask().completed"
+      (change)="toggleCompleted($event)"
+    />
+
+    <span [class.line-through]="subtask().completed">
+      {{ subtask().description }}
+    </span>
+  </label>
+
+  <button
+    type="button"
+    class="delete-btn ms-2 text-sm rounded-lg text-red-700 hover:text-red-600 p-0.5 hover:bg-red-50 cursor-pointer"
+    (click)="deleteSubtask()"
+  >
+    Borrar
+  </button>
+</div>

@@ -1,0 +1,27 @@
+<div class="flex items-start gap-3">
+  <a [routerLink]="['/profile', comment().user.id]" class="shrink-0">
+    <img
+      [src]="comment().user.avatar"
+      [alt]="'Avatar de ' + comment().user.name"
+      class="user-avatar w-10 h-10 rounded-full border-2 border-gray-200"
+    />
+  </a>
+
+  <div>
+    <p class="font-medium text-gray-800 flex flex-wrap items-center gap-2">
+      <a [routerLink]="['/profile', comment().user.id]" class="user-name hover:underline">
+        {{ comment().user.name }}
+      </a>
+
+      <span class="comment-date text-xs font-normal text-gray-500">
+        {{ comment().createdAt | date:'dd/MM/yyyy HH:mm' }}
+      </span>
+    </p>
+
+    <div class="bg-gray-100 p-3 rounded-lg mt-1">
+      <p class="comment-text whitespace-pre-wrap">
+        {{ comment().comment }}
+      </p>
+    </div>
+  </div>
+</div>

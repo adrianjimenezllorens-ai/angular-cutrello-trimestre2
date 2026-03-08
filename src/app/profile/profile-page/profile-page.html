@@ -1,0 +1,190 @@
+<div class="w-full max-w-2xl mx-auto">
+  @if (isLoading()) {
+    <div class="bg-white p-8 rounded-lg shadow-md text-center text-gray-600">
+      Cargando perfil...
+    </div>
+  } @else if (hasError()) {
+    <div class="bg-white p-8 rounded-lg shadow-md text-center text-red-700">
+      No se ha podido cargar el perfil
+    </div>
+  } @else if (profile()) {
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Perfil de usuario</h2>
+
+    <div class="bg-white p-8 rounded-lg shadow-md">
+      @if (successMessage()) {
+        <div class="mb-4 rounded-lg bg-green-100 px-4 py-3 text-sm text-green-700">
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="mb-4 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (!showEditProfile() && !showChangePassword()) {
+        <div>
+          <div class="text-center">
+            @if (isMine()) {
+              <input
+                type="file"
+                id="avatar-upload"
+                class="hidden"
+                accept="image/*"
+                encodeBase64
+                (encoded)="changeAvatar($event)"
+              />
+              <label for="avatar-upload" class="cursor-pointer group relative inline-block">
+                <img
+                  [src]="profile()!.avatar"
+                  alt="Avatar del usuario"
+                  class="w-32 h-32 object-cover rounded-full mx-auto mb-4 border-4 border-gray-200 transition-colors"
+                />
+                <div
+                  class="absolute inset-0 bg-black bg-opacity-50 rounded-full h-32 flex items-center justify-center opacity-0 group-hover:opacity-70 border-4 border-blue-800 transition-opacity"
+                >
+                  <span class="text-white text-sm font-bold">Cambiar</span>
+                </div>
+              </label>
+            } @else {
+              <img
+                [src]="profile()!.avatar"
+                alt="Avatar del usuario"
+                class="w-32 h-32 object-cover rounded-full mx-auto mb-4 border-4 border-gray-200"
+              />
+            }
+
+            <h3 class="text-2xl font-bold text-gray-800">{{ profile()!.name }}</h3>
+            <p class="text-gray-500">{{ profile()!.email }}</p>
+          </div>
+
+          @if (isMine()) {
+            <div class="mt-8 border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-4">
+              <button
+                type="button"
+                class="w-full bg-blue-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 cursor-pointer"
+                (click)="toggleEditProfile()"
+              >
+                Editar Perfil
+              </button>
+              <button
+                type="button"
+                class="w-full bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-cyan-600 cursor-pointer"
+                (click)="toggleChangePassword()"
+              >
+                Cambiar Contraseña
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      @if (showEditProfile()) {
+        <form class="pt-4" (submit)="saveProfile($event)">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">Editar Perfil</h3>
+
+          <div class="space-y-6">
+            <div>
+              <label for="name" class="block text-gray-700 font-bold mb-2">Nombre Completo</label>
+              <input
+                type="text"
+                id="name"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                [formField]="editProfileForm.name"
+              />
+              @for (error of editProfileForm.name().errors(); track error.kind) {
+                <div class="text-xs mt-1 text-red-700">{{ error.message }}</div>
+              }
+            </div>
+
+            <div>
+              <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+              <input
+                type="email"
+                id="email"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                [formField]="editProfileForm.email"
+              />
+              @for (error of editProfileForm.email().errors(); track error.kind) {
+                <div class="text-xs mt-1 text-red-700">{{ error.message }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="mt-8 flex gap-4">
+            <button
+              type="submit"
+              class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              [disabled]="editProfileForm().invalid()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300"
+              (click)="cancelEditProfile()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      }
+
+      @if (showChangePassword()) {
+        <form class="pt-4" (submit)="savePassword($event)">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">Cambiar Contraseña</h3>
+
+          <div class="space-y-6">
+            <div>
+              <label for="new-password" class="block text-gray-700 font-bold mb-2">
+                Nueva Contraseña
+              </label>
+              <input
+                type="password"
+                id="new-password"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                [formField]="passwordForm.password"
+              />
+              @for (error of passwordForm.password().errors(); track error.kind) {
+                <div class="text-xs mt-1 text-red-700">{{ error.message }}</div>
+              }
+            </div>
+
+            <div>
+              <label for="confirm-new-password" class="block text-gray-700 font-bold mb-2">
+                Repite Contraseña
+              </label>
+              <input
+                type="password"
+                id="confirm-new-password"
+                class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                [formField]="passwordForm.passwordConfirm"
+              />
+              @for (error of passwordForm.passwordConfirm().errors(); track error.kind) {
+                <div class="text-xs mt-1 text-red-700">{{ error.message }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="mt-8 flex gap-4">
+            <button
+              type="submit"
+              class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              [disabled]="passwordForm().invalid()"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              class="w-full bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300"
+              (click)="cancelChangePassword()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  }
+</div>
